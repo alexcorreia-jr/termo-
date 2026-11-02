@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from tkinter import font as tkfont
 import random
@@ -534,4 +533,40 @@ class Termo(tk.Tk):
         self.geometry(f"+{(sw - w) // 2}+{(sh - h) // 2}")
 
     def _iniciar_pulse(self):
-        """Título pulsa suavemente entre azul ciano e branco
+        """Faz o título pulsar suavemente entre azul-ciano e branco."""
+        self.pulse_step = 0
+        self.pulse_direction = 1
+
+        def pulse():
+            # Alterna suavemente a intensidade da cor
+            self.pulse_step += self.pulse_direction * 3
+
+            if self.pulse_step >= 255:
+                self.pulse_step = 255
+                self.pulse_direction = -1
+            elif self.pulse_step <= 0:
+                self.pulse_step = 0
+                self.pulse_direction = 1
+
+            # Interpolação entre ciano e branco
+            r = int(0 + (255 * self.pulse_step / 255))
+            g = int(170 + (255 - 170) * self.pulse_step / 255)
+            b = 255
+
+            cor = f"#{r:02x}{g:02x}{b:02x}"
+
+            self.hdr.itemconfig(self.hdr_title, fill=cor)
+
+            # Agenda a próxima atualização
+            self.after(35, pulse)
+
+        pulse()
+
+
+# ═══════════════════════════════════════════════════════════════════
+# EXECUÇÃO DO JOGO
+# ═══════════════════════════════════════════════════════════════════
+
+if __name__ == "__main__":
+    app = Termo()
+    app.mainloop()
